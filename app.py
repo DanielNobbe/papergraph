@@ -3,6 +3,7 @@ from fastapi import FastAPI, File, UploadFile
 from papergraph.graph import create_graph
 from papergraph.state import get_iofile_input_state
 from papergraph.output import push_result
+import logging
 
 import yaml
 
@@ -15,18 +16,23 @@ config = load_config('configs/config.yaml')
 graph = create_graph(config['graph'])
 app = FastAPI()
 
+logger = logging.getLogger("uvicorn.error")
+
 def build_input_state(upload_file: UploadFile):
     state = get_iofile_input_state(upload_file.file)
     return state
 
 @app.post("/process")
 async def run_graph(file: UploadFile = File(...)):
+    logger.info("Processing file..")
 
     state = build_input_state(file)
 
     result = graph.invoke(state)
 
     push_result(result['result'])
+
+    logger.info("Processing completed")
 
     return {"result": result['result']}
 
