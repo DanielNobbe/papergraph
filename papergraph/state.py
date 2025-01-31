@@ -38,7 +38,4 @@ def get_iofile_input_state(item: BinaryIO, config: dict) -> State:
     state['result'] = Result()  # may stay empty
 
     state['item'] = item
-
-    state['chunk_size'] = config['chunk_size']  # mistral large has 130k context window
-    state['chunk_overlap'] = config['chunk_overlap']
     return state

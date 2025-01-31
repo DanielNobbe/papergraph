@@ -35,7 +35,7 @@ def convert_to_datetime(string: str):
     
 
 
-def load_document(state: State):
+def load_document(state: State, config: dict):
     print("Loading document..")
     if state.get('path'):
         filepath = state['path']
@@ -58,11 +58,11 @@ def load_document(state: State):
     return state
 
 
-def split_text(state: State):
+def split_text(state: State, config: dict):
     print("Splitting text..")  # normally would add fastapi logging
     doc = state['doc']
 
-    text_splitter = RecursiveCharacterTextSplitter(chunk_size=state['chunk_size'], chunk_overlap=state['chunk_overlap'])
+    text_splitter = RecursiveCharacterTextSplitter(chunk_size=config['chunk_size'], chunk_overlap=config['chunk_overlap'])
     split_docs = text_splitter.split_documents([doc])
 
     state["docs"] = split_docs
@@ -70,13 +70,13 @@ def split_text(state: State):
     return state
 
 
-def extract_metadata(state: State):
+def extract_metadata(state: State, config: dict):
     print("Extracting metadata..")
     llm = ChatMistralAI(model="mistral-large-latest", temperature=0, api_key="Osq78PYUMFm97Iy5g4pWceAjz2awLzrE")
 
     docs = state['docs']
 
-    response_schemas = [
+    response_schemas = [  # could be specified in config too
         ResponseSchema(name="author", description="The author of the paper"),
         ResponseSchema(name="date", description="The date the paper was published as YYYY-MM-DD"),
         ResponseSchema(name="title", description="The title of the paper"),
@@ -100,12 +100,12 @@ def extract_metadata(state: State):
     return state
 
 
-def extract_key_findings(state: State):
+def extract_key_findings(state: State, config: dict):
     print("Extracting key findings..")
     docs = state['docs']
 
     # feels wasteful to initialise this every time, but it's just a wrapper around an API
-    llm = ChatMistralAI(model="mistral-large-latest", temperature=0, api_key="Osq78PYUMFm97Iy5g4pWceAjz2awLzrE")
+    llm = ChatMistralAI(model=config['model'], temperature=0, api_key="Osq78PYUMFm97Iy5g4pWceAjz2awLzrE")
 
     # docs is only one doc if the context window is large enough, otherwise it's multiple
 
@@ -126,12 +126,12 @@ def extract_key_findings(state: State):
     return state  # Returning a list of key points
 
 
-def extract_methodology(state: State):
+def extract_methodology(state: State, config: dict):
     print("Extracting methodology..")
     docs = state['docs']
 
     # feels wasteful to initialise this every time, but it's just a wrapper around an API
-    llm = ChatMistralAI(model="mistral-large-latest", temperature=0, api_key="Osq78PYUMFm97Iy5g4pWceAjz2awLzrE")
+    llm = ChatMistralAI(model=config['model'], temperature=0, api_key="Osq78PYUMFm97Iy5g4pWceAjz2awLzrE")
 
     # docs is only one doc if the context window is large enough, otherwise it's multiple
 
@@ -151,12 +151,12 @@ def extract_methodology(state: State):
     return state  # Returning a list of key points
 
 
-def generate_summary(state: State):
+def generate_summary(state: State, config: dict):
     print("Generating summary..")
     docs = state['docs']
 
     # feels wasteful to initialise this every time, but it's just a wrapper around an API
-    llm = ChatMistralAI(model="mistral-large-latest", temperature=0, api_key="Osq78PYUMFm97Iy5g4pWceAjz2awLzrE")
+    llm = ChatMistralAI(model=config['model'], temperature=0, api_key="Osq78PYUMFm97Iy5g4pWceAjz2awLzrE")
 
     # docs is only one doc if the context window is large enough, otherwise it's multiple
 
@@ -175,12 +175,12 @@ def generate_summary(state: State):
     return state  # Returning a list of key points
 
 
-def extract_keywords(state: State):
+def extract_keywords(state: State, config: dict):
     print("Extracting keywords..")
     docs = state['docs']
 
     # feels wasteful to initialise this every time, but it's just a wrapper around an API
-    llm = ChatMistralAI(model="mistral-large-latest", temperature=0, api_key="Osq78PYUMFm97Iy5g4pWceAjz2awLzrE")
+    llm = ChatMistralAI(model=config['model'], temperature=0, api_key="Osq78PYUMFm97Iy5g4pWceAjz2awLzrE")
 
     # docs is only one doc if the context window is large enough, otherwise it's multiple
 
