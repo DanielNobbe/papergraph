@@ -1,3 +1,4 @@
+import os
 
 from langchain_community.document_loaders import PyPDFLoader, Blob
 from langchain_community.document_loaders.pdf import PyPDFParser
@@ -37,7 +38,6 @@ def convert_to_datetime(string: str):
         return datetime_parser.parse("1970-01-01")
     
 
-
 def load_document(state: State, config: dict):
     print("Loading document..")
     if state.get('path'):
@@ -75,7 +75,7 @@ def split_text(state: State, config: dict):
 
 def extract_metadata(state: State, config: dict):
     print("Extracting metadata..")
-    llm = ChatMistralAI(model="mistral-large-latest", temperature=0, api_key="Osq78PYUMFm97Iy5g4pWceAjz2awLzrE")
+    llm = ChatMistralAI(model="mistral-large-latest", temperature=0, api_key=os.getenv("MISTRAL_API_KEY"))
 
     docs = state['docs']
 
@@ -108,7 +108,7 @@ def extract_key_findings(state: State, config: dict):
     docs = state['docs']
 
     # feels wasteful to initialise this every time, but it's just a wrapper around an API
-    llm = ChatMistralAI(model=config['model'], temperature=0, api_key="Osq78PYUMFm97Iy5g4pWceAjz2awLzrE")
+    llm = ChatMistralAI(model=config['model'], temperature=0, api_key=os.getenv("MISTRAL_API_KEY"))
 
     # docs is only one doc if the context window is large enough, otherwise it's multiple
 
@@ -134,7 +134,7 @@ def extract_methodology(state: State, config: dict):
     docs = state['docs']
 
     # feels wasteful to initialise this every time, but it's just a wrapper around an API
-    llm = ChatMistralAI(model=config['model'], temperature=0, api_key="Osq78PYUMFm97Iy5g4pWceAjz2awLzrE")
+    llm = ChatMistralAI(model=config['model'], temperature=0, api_key=os.getenv("MISTRAL_API_KEY"))
 
     # docs is only one doc if the context window is large enough, otherwise it's multiple
 
@@ -159,7 +159,7 @@ def generate_summary(state: State, config: dict):
     docs = state['docs']
 
     # feels wasteful to initialise this every time, but it's just a wrapper around an API
-    llm = ChatMistralAI(model=config['model'], temperature=0, api_key="Osq78PYUMFm97Iy5g4pWceAjz2awLzrE")
+    llm = ChatMistralAI(model=config['model'], temperature=0, api_key=os.getenv("MISTRAL_API_KEY"))
 
     # docs is only one doc if the context window is large enough, otherwise it's multiple
 
@@ -183,7 +183,7 @@ def extract_keywords(state: State, config: dict):
     docs = state['docs']
 
     # feels wasteful to initialise this every time, but it's just a wrapper around an API
-    llm = ChatMistralAI(model=config['model'], temperature=0, api_key="Osq78PYUMFm97Iy5g4pWceAjz2awLzrE")
+    llm = ChatMistralAI(model=config['model'], temperature=0, api_key=os.getenv("MISTRAL_API_KEY"))
 
     # docs is only one doc if the context window is large enough, otherwise it's multiple
 

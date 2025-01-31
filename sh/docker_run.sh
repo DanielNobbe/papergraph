@@ -1,2 +1,2 @@
  docker run -p 8000:8000 -e PORT=8000 -v ~/.config/gcloud/application_default_credentials.json:/var/secrets/google/key.json \
-  -e GOOGLE_APPLICATION_CREDENTIALS=/var/secrets/google/key.json -t papergraph:test 
+  -e GOOGLE_APPLICATION_CREDENTIALS=/var/secrets/google/key.json -e MISTRAL_API_KEY=$MISTRAL_API_KEY -t papergraph:test 

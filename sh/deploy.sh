@@ -1,1 +1,1 @@
-gcloud run deploy papergraph --source . --port 8000 --allow-unauthenticated
+gcloud run deploy papergraph --source . --port 8000 --allow-unauthenticated  --set-env-vars MISTRAL_API_KEY=$MISTRAL_API_KEY
