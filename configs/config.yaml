@@ -3,3 +3,8 @@ bigquery:
   project_id: principal-rhino-449413-s3
   dataset_id: astrafy_task_2
   table_id: papers
+graph:
+  # note: only supports mistral models for now
+  model: 
+  chunk_size: 90000
+  chunk_overlap: 1000
