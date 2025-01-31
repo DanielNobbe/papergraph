@@ -1,0 +1,1 @@
+gcloud run deploy papergraph --source . --port 8000 --allow-unauthenticated
