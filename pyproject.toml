@@ -14,3 +14,17 @@ dependencies = [
 [build-system]
 requires = ["poetry-core>=2.0.0,<3.0.0"]
 build-backend = "poetry.core.masonry.api"
+
+[tool.poetry.group.dev.dependencies]
+flake8 = "^7.1.1"
+black = "^25.1.0"
+pylint = "^3.3.4"
+ruff = "^0.9.4"
+mypy = "^1.14.1"
+
+[tool.black]
+line-length = 88
+
+[tool.ruff]
+line-length = 88
+indent-width = 4
