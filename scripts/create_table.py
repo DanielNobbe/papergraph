@@ -1,5 +1,6 @@
 import yaml
 from google.cloud import bigquery
+from google.cloud.exceptions import NotFound
 
 def create_dataset(project_id, dataset_id):
     # Initialize a BigQuery client
@@ -12,7 +13,7 @@ def create_dataset(project_id, dataset_id):
     try:
         client.get_dataset(dataset_ref)
         print(f"Dataset {dataset_id} already exists.")
-    except:
+    except NotFound:
         # Create the dataset
         dataset = bigquery.Dataset(dataset_ref)
         print(f"Creating dataset {dataset_id}...")
