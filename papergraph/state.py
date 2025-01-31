@@ -33,7 +33,7 @@ def get_filepath_input_state(path: str) -> State:
     return state
 
 
-def get_iofile_input_state(item: BinaryIO, config: dict) -> State:
+def get_iofile_input_state(item: BinaryIO) -> State:
     state = State()
     state['result'] = Result()  # may stay empty
 
