@@ -1,0 +1,5 @@
+bigquery:
+  schema_file: configs/schema.yaml
+  project_id: principal-rhino-449413-s3
+  dataset_id: astrafy_task_2
+  table_id: papers
