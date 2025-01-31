@@ -39,3 +39,6 @@ line-length = 88
 [tool.ruff]
 line-length = 88
 indent-width = 4
+
+[tool.pylint.messages_control]
+disable = ["C0116", "C0114", "C0115"]

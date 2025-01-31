@@ -1,18 +1,18 @@
 # flake8: noqa: E302
+import logging
+import yaml
 
 import uvicorn
 from fastapi import FastAPI, File, UploadFile
 from papergraph.graph import create_graph
 from papergraph.state import get_iofile_input_state
 from papergraph.output import push_result
-import logging
 
-import yaml
 
 def load_config(path: str):
-    with open(path, 'r') as f:
-        config = yaml.safe_load(f)
-    return config
+    with open(path, 'r', encoding='utf-8') as f:
+        conf = yaml.safe_load(f)
+    return conf
 
 config = load_config('configs/config.yaml')
 graph = create_graph(config['graph'])

@@ -1,4 +1,4 @@
-import langgraph.graph as graph
+from langgraph import graph
 
 from .state import State
 from .nodes import (

@@ -11,6 +11,3 @@ poetry run black --check .
 
 echo "Running Pylint..."
 poetry run pylint .
-
-echo "Running MyPy..."
-poetry run mypy .

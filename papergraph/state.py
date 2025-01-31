@@ -1,8 +1,7 @@
-from typing_extensions import TypedDict
 from typing import BinaryIO, Optional
-from langchain.schema import Document
 
-# from fastapi import FastAPI, File, UploadFile
+from typing_extensions import TypedDict
+from langchain.schema import Document
 
 
 class Result(TypedDict):

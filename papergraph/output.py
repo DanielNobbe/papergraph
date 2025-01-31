@@ -29,9 +29,9 @@ def push_result(result: dict):
     # push it to the table
     rows_to_insert = [result]
     errors = client.insert_rows(table, rows_to_insert)
-    if errors == []:
+    if not errors:
         print("New rows have been added.")
     else:
-        print("Encountered errors while inserting rows: {}".format(errors))
+        print(f"Encountered errors while inserting rows: {errors}")
 
     return result

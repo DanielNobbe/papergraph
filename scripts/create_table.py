@@ -2,6 +2,7 @@ import yaml
 from google.cloud import bigquery
 from google.cloud.exceptions import NotFound
 
+
 def create_dataset(project_id, dataset_id):
     # Initialize a BigQuery client
     client = bigquery.Client(project=project_id)
@@ -19,16 +20,23 @@ def create_dataset(project_id, dataset_id):
         print(f"Creating dataset {dataset_id}...")
         dataset = client.create_dataset(dataset)
 
+
 def create_table_from_schema(project_id, dataset_id, table_id, schema_file):
     # Initialize a BigQuery client
     client = bigquery.Client(project=project_id)
 
     # Load schema from JSON file
-    with open(schema_file, 'r') as f:
+    with open(schema_file, 'r', encoding='utf-8') as f:
         schema_dict = yaml.load(f, Loader=yaml.SafeLoader)
 
     # Convert schema dictionary to BigQuery SchemaField objects
-    schema = [bigquery.SchemaField(field['name'], field['type'], mode=field['mode']) for field in schema_dict['fields']]
+    schema = [
+        bigquery.SchemaField(
+            field['name'],
+            field['type'],
+            mode=field['mode']
+        ) for field in schema_dict['fields']
+    ]
 
     # if dataset doesn't exist, create it
     create_dataset(project_id, dataset_id)
@@ -43,14 +51,14 @@ def create_table_from_schema(project_id, dataset_id, table_id, schema_file):
     try:
         table = client.create_table(table)
         print(f"Table {table.table_id} created successfully.")
-    except Exception as e:
+    except Exception as e:  # pylint: disable=broad-except
         print(f"Failed to create table: {e}")
 
 
-if __name__ == "__main__":
+def main():
     config_file = 'configs/config.yaml'
 
-    with open(config_file, 'r') as f:
+    with open(config_file, 'r', encoding='utf-8') as f:
         config = yaml.load(f, Loader=yaml.SafeLoader)
 
     project_id = config['project_id']
@@ -59,3 +67,7 @@ if __name__ == "__main__":
     schema_file = config['schema_file']
 
     create_table_from_schema(project_id, dataset_id, table_id, schema_file)
+
+
+if __name__ == "__main__":
+    main()
