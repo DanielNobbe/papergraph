@@ -1,3 +1,5 @@
+# flake8: noqa: E302
+
 import uvicorn
 from fastapi import FastAPI, File, UploadFile
 from papergraph.graph import create_graph
