@@ -8,3 +8,4 @@ graph:
   model: mistral-large-latest
   chunk_size: 90000
   chunk_overlap: 1000
+  concurrent: False
