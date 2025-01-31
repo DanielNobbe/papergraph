@@ -1,0 +1,33 @@
+fields:
+  # metadata
+  - name: title
+    type: STRING
+    mode: NULLABLE
+  - name: author
+    type: STRING
+    mode: NULLABLE
+  - name: date
+    type: TIMESTAMP
+    mode: NULLABLE
+  - name: abstract
+    type: STRING
+    mode: NULLABLE
+  - name: number_of_authors
+    type: INTEGER
+    mode: NULLABLE
+  - name: institutions
+    type: STRING
+    mode: NULLABLE  # not repeated since partial match is ok
+  # summarised content
+  - name: keywords
+    type: STRING
+    mode: NULLABLE
+  - name: key_findings
+    type: STRING
+    mode: REPEATED
+  - name: methodology
+    type: STRING
+    mode: NULLABLE
+  - name: summary
+    type: STRING
+    mode: NULLABLE
