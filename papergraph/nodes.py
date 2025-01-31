@@ -14,6 +14,9 @@ from .state import State
 # from langchain.parsers import PyPDFParser
 from langchain.document_loaders.base import BaseLoader
 
+linebreak = "\n"
+double_linebreak = "\n\n"
+
 class CustomPDFLoader(BaseLoader):
     def __init__(self, file: BinaryIO, extract_images: bool = False):
         self.file = file
@@ -88,7 +91,7 @@ def extract_metadata(state: State, config: dict):
     output_parser = StructuredOutputParser.from_response_schemas(response_schemas)
     format_instructions = output_parser.get_format_instructions()
 
-    prompt = f"Extract the following metadata:\n{format_instructions}\n\nDocument:\n{docs[0].page_content}"
+    prompt = f"Extract the following metadata:{linebreak}{format_instructions}{double_linebreak}Document:{linebreak}{docs[0].page_content}"
     
     response = llm.invoke(prompt)
 
@@ -112,16 +115,16 @@ def extract_key_findings(state: State, config: dict):
     # extract key points from each doc, then merge the key points
     responses = []
     for doc in docs:
-        prompt = f"Extract key findings from the following research paper, formatted like ' - [title 1]: ... \n\n - [title 2]: ... \n\n':\n\n{doc.page_content}"
+        prompt = f"Extract key findings from the following research paper, formatted like ' - [title 1]: ... {double_linebreak} - [title 2]: ... {double_linebreak}':{double_linebreak}{doc.page_content}"
         responses.append(llm.invoke(prompt))
     # could add a request to make the sentences verbatim, but not super relevant
     # to truly ensure verbatimness, we can use RAG from a vector store instead
 
     if len(docs) > 1:
-        final_prompt = f"Extract all unique key findings from these overviews, provided by separate experts, formatted like ' - [title 1]: ... \n\n - [title 2]: ... \n\n':\n\n{'\n'.join(responses)}"
-        state['result']['key_findings'] = llm.invoke(final_prompt).content.split("\n\n")
+        final_prompt = f"Extract all unique key findings from these overviews, provided by separate experts, formatted like ' - [title 1]: ... {double_linebreak} - [title 2]: ... {double_linebreak}':{double_linebreak}{linebreak.join(responses)}"
+        state['result']['key_findings'] = llm.invoke(final_prompt).content.split(double_linebreak)
     else:
-        state['result']['key_findings'] = responses[0].content.split("\n\n")
+        state['result']['key_findings'] = responses[0].content.split(double_linebreak)
     
     return state  # Returning a list of key points
 
@@ -138,12 +141,12 @@ def extract_methodology(state: State, config: dict):
     # extract key points from each doc, then merge the key points
     responses = []
     for doc in docs:
-        prompt = f"Extract research methodology from the following research paper:\n\n{doc.page_content}"
+        prompt = f"Extract research methodology from the following research paper:{double_linebreak}{doc.page_content}"
         responses.append(llm.invoke(prompt))
 
     if len(docs) > 1:
         # TODO: Test for shorter context windows to verify this works
-        final_prompt = f"Combine the research methodology from the following overviews about a paper, provided by other experts:\n\n{'/n'.join(responses)}"
+        final_prompt = f"Combine the research methodology from the following overviews about a paper, provided by other experts:{double_linebreak}{'/n'.join(responses)}"
         state['result']['methodology'] = llm.invoke(final_prompt).content
     else:
         state['result']['methodology'] = responses[0].content
@@ -162,12 +165,12 @@ def generate_summary(state: State, config: dict):
 
     responses = []
     for doc in docs:
-        prompt = f"Write a well-structured summary that is relevant to (ML) engineers and at most 200 words:\n\n{doc.page_content}"
+        prompt = f"Write a well-structured summary that is relevant to (ML) engineers and at most 200 words:{double_linebreak}{doc.page_content}"
         responses.append(llm.invoke(prompt))
 
     if len(docs) > 1:
         # TODO: Test for shorter context windows to verify this works
-        final_prompt = f"Combine the following summaries into a well-strutured summary that is relevant to (ML) engineers and at most 200 words. The summaries are written by various experts for the same research paper:\n\n{'\n'.join(responses)}"
+        final_prompt = f"Combine the following summaries into a well-strutured summary that is relevant to (ML) engineers and at most 200 words. The summaries are written by various experts for the same research paper:{double_linebreak}{linebreak.join(responses)}"
         state['result']['summmary'] = llm.invoke(final_prompt).content
     else:
         state['result']['summary'] = responses[0].content
@@ -187,12 +190,12 @@ def extract_keywords(state: State, config: dict):
     responses = []
     for doc in docs:
         # prompt = f"Extract (at most 20) keywords, that are relevant to (ML) engineers, from the following research paper:\n\n{doc.page_content}"
-        prompt = f"Extract less than 10 keywords that are relevant to (ML) engineers from the following research paper. Please format your response like 'keyword1, keyword2'. \n\n{doc.page_content}"
+        prompt = f"Extract less than 10 keywords that are relevant to (ML) engineers from the following research paper. Please format your response like 'keyword1, keyword2'. {double_linebreak}{doc.page_content}"
         responses.append(llm.invoke(prompt))
     
     if len(docs) > 1:
         # TODO: Test for shorter context windows to verify this works
-        final_prompt = f"Extract from the following keywords a list of (less than 10) keywords that are most relevant to (ML) engineers. Please format like 'keyword1, keyword2'\n\n{'\n'.join(responses)}"
+        final_prompt = f"Extract from the following keywords a list of (less than 10) keywords that are most relevant to (ML) engineers. Please format like 'keyword1, keyword2'{double_linebreak}{linebreak.join(responses)}"
         state['result']['keywords'] = llm.invoke(final_prompt).content
     else:
         state['result']['keywords'] = responses[0].content
